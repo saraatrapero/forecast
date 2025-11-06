@@ -255,13 +255,19 @@ export default function FileUploader({ onFileUpload }: FileUploaderProps) {
         }`}
       >
         <input
+          id="file-input"
           ref={inputRef}
           type="file"
           accept=".xlsx,.xls"
           onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-          className="hidden"
+          className="sr-only"
         />
-        <button onClick={() => inputRef.current?.click()} className="flex flex-col items-center gap-2 w-full">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex flex-col items-center gap-2 w-full"
+          aria-label="Seleccionar archivo Excel"
+        >
           <Upload className="w-8 h-8 text-blue-400" />
           <span className="text-sm font-medium text-slate-300">Arrastra tu Excel aquí o haz clic</span>
           <span className="text-xs text-slate-500">Formato: Cliente (28 chars) + SKU (7 chars) + datos de ventas</span>

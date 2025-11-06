@@ -11,6 +11,7 @@ export default function Home() {
   const [uploadedData, setUploadedData] = useState<any>(null)
   const [forecastMonths, setForecastMonths] = useState(3)
   const [selectedModel, setSelectedModel] = useState<string>("v0")
+  const [forceV0, setForceV0] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
   const [forecastResults, setForecastResults] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
@@ -50,6 +51,8 @@ export default function Home() {
           salesData: uploadedData,
           forecastMonths,
           endDate: selectedEndDate,
+          model: forceV0 ? "v0" : selectedModel,
+          options: {},
         }),
       })
 
@@ -141,7 +144,18 @@ export default function Home() {
                     <option value="sarimax">SARIMAX (requiere servicio Python)</option>
                     <option value="ml_cluster">ML por clúster (XGBoost/LightGBM)</option>
                   </select>
-                  <p className="text-xs text-slate-400 mt-2">Nota: algunos modelos requieren un servicio externo; por ahora se ejecuta el algoritmo local (v0) como placeholder.</p>
+                  <p className="text-xs text-slate-400 mt-2">Nota: algunos modelos requieren un servicio externo; si no hay servicio disponible, el sistema hará fallback automático al algoritmo local (v0).</p>
+
+                  <div className="mt-3 flex items-center gap-2">
+                    <input
+                      id="force-v0"
+                      type="checkbox"
+                      checked={forceV0}
+                      onChange={(e) => setForceV0(e.target.checked)}
+                      className="w-4 h-4"
+                    />
+                    <label htmlFor="force-v0" className="text-xs text-slate-300">Forzar uso de v0 (ignorar servicio externo)</label>
+                  </div>
                 </div>
 
                 <div>
@@ -196,10 +210,9 @@ export default function Home() {
                 </CardContent>
               </Card>
             )}
-                          salesData: uploadedData,
-                          forecastMonths,
-                          endDate: selectedEndDate,
-                          model: selectedModel,
+
+            </div>
+
           <div className="lg:col-span-2">
             {error && (
               <Card className="bg-red-900/30 border-red-700/50 mb-6">
